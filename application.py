@@ -45,7 +45,18 @@ def search():
     """Search for places that match query."""
 
     # ensure parameter is present
-    return jsonify([])
+    if not request.args.get("q"):
+        raise RuntimeError("missing query string")
+
+    q = request.args.get("q") + "%"
+    rows = db.execute("""SELECT * FROM places WHERE
+        postal_code LIKE :q OR
+        admin_code1 LIKE :q OR
+        place_name LIKE :q OR
+        admin_name1 LIKE :q""",
+        q=q)
+
+    return jsonify(rows)
 
 @app.route("/update")
 def update():
