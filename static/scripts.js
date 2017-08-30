@@ -7,6 +7,9 @@ var markers = [];
 // info window
 var info = new google.maps.InfoWindow();
 
+// news icon to replace default google marker
+var icon_path = '../static/icon.png';
+
 // execute when the DOM is fully loaded
 $(function() {
 
@@ -68,7 +71,8 @@ function addMarker(place)
         position: { lat: place.latitude, lng: place.longitude },
         map: map,
         animation: google.maps.Animation.DROP,
-        title: place.place_name + ", " + place.admin_name1
+        title: place.place_name + ", " + place.admin_name1,
+        icon: icon_path
     });
 
     // add event listener to marker
@@ -77,7 +81,7 @@ function addMarker(place)
        links = $.getJSON(Flask.url_for("articles"), params)
        .done(function(data, textStatus, jqXHR) {
            var content = "<div><h5>" + marker.title + "</h5></div>";
-           for (var i = 0; i < data.length; i++)
+           for (var i = 0, n = data.length; i < n; i++)
            {
                content += "<div><a href='" + data[i].link + "'>" + data[i].title + "</a></div>";
            }
@@ -171,7 +175,12 @@ function configure()
  */
 function removeMarkers()
 {
-    // TODO
+    for (var i = 0, n = markers.length; i < n; i++)
+    {
+        markers[i].setMap(null);
+    }
+
+    markers = [];
 }
 
 /**
