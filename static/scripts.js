@@ -261,7 +261,7 @@ function update()
        removeMarkers();
 
        // add new markers to map
-       for (var i = 0; i < data.length; i++)
+       for (var i = 0, n = data.length; i < n; i++)
        {
            addMarker(data[i]);
        }

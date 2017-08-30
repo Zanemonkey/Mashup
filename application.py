@@ -101,5 +101,14 @@ def update():
             LIMIT 10""",
             sw_lat=sw_lat, ne_lat=ne_lat, sw_lng=sw_lng, ne_lng=ne_lng)
 
+    query = db.execute("""SELECT * FROM places
+        WHERE postal_code LIKE :q OR
+        admin_code1 LIKE :q OR
+        place_name LIKE :q OR
+        admin_name1 LIKE :q
+        LIMIT 1""",
+        q=request.args.get("q"))
+
+    rows.append(query)
     # output places as JSON
     return jsonify(rows)
