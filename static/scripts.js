@@ -81,10 +81,13 @@ function addMarker(place)
        links = $.getJSON(Flask.url_for("articles"), params)
        .done(function(data, textStatus, jqXHR) {
            var content = "<div><h5>" + marker.title + "</h5></div>";
-           for (var i = 0, n = data.length; i < n; i++)
+           content += "<div class='list-group'>";
+           var n = data.length > 5 ? 5 : data.length;
+           for (var i = 0; i < n; i++)
            {
-               content += "<div><a href='" + data[i].link + "'>" + data[i].title + "</a></div>";
+               content += "<a class='list-group-item' href='" + data[i].link + "'>" + data[i].title + "</a>";
            }
+           content += "</div>";
            showInfo(marker, content);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
