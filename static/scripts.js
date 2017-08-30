@@ -63,7 +63,36 @@ $(function() {
  */
 function addMarker(place)
 {
-    // TODO
+    // instantiate new marker
+    var marker = new google.maps.Marker({
+        position: { lat: place.latitude, lng: place.longitude },
+        map: map,
+        animation: google.maps.Animation.DROP,
+        title: place.place_name + ", " + place.admin_name1
+    });
+
+    // add event listener to marker
+    marker.addListener('click', function(e){
+       var params = { geo: place.postal_code };
+       links = $.getJSON(Flask.url_for("articles"), params)
+       .done(function(data, textStatus, jqXHR) {
+           var content = "<div><h5>" + marker.title + "</h5></div>";
+           for (var i = 0; i < data.length; i++)
+           {
+               content += "<div><a href='" + data[i].link + "'>" + data[i].title + "</a></div>";
+           }
+           showInfo(marker, content);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+        // log error to browser's console
+        console.log(errorThrown.toString());
+        });
+
+    });
+
+    // add marker to global array markers
+    markers.push(marker);
+
 }
 
 /**
